@@ -36,7 +36,7 @@ class Array
   end
 
   def drop_every(n)
-    select.with_index { |_, index| index.succ.remainder(n).nonzero? }
+    reject.with_index { |_, index| index.succ.remainder(n).zero? }
   end
 
   def combine_with(other)
