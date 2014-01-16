@@ -2,8 +2,10 @@ class Todo
   attr_reader :status, :description, :priority, :tags
 
   def initialize(status, description, priority, tags)
-    @status, @priority = [status, priority].map(&:downcase).map(&:to_sym)
-    @description, @tags = description, tags
+    @status      = status
+    @description = description
+    @priority    = priority
+    @tags        = tags
   end
 end
 
@@ -61,6 +63,7 @@ module TasksInformation
   end
 
   private
+
   def tasks_information(status)
     filter(Criteria.status status).count
   end
@@ -73,11 +76,9 @@ class TodoList
   attr_reader :tasks
 
   def self.parse(text)
-    text_formatted = text.lines.map { |line| line.split('|').map(&:strip) }
-    tasks = text_formatted.map do |status, description, priority, tags|
-      Todo.new status, description, priority, tags.split(',').map(&:strip)
-    end
-    TodoList.new tasks
+    parsed = Parser.new(text) { |args| Todo.new *args }
+
+    TodoList.new parsed.tasks
   end
 
   def initialize(tasks)
@@ -98,5 +99,29 @@ class TodoList
 
   def adjoin(other)
     TodoList.new @tasks.concat(other.tasks).uniq
+  end
+
+
+  class Parser
+    attr_reader :tasks
+
+    def initialize(text, &block)
+      @tasks = parse_lines(text).map(&block)
+    end
+
+    def parse_lines(text)
+      text.lines.map { |line| line.split('|').map(&:strip) }.map do |args|
+        format_attributes *args
+      end
+    end
+
+    def format_attributes(status, description, priority, tags)
+      [
+        status.downcase.to_sym,
+        description,
+        priority.downcase.to_sym,
+        tags.split(',').map(&:strip)
+      ]
+    end
   end
 end
