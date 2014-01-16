@@ -1,6 +1,6 @@
 class Integer
   def prime?
-    return false if self < 0
+    return false if self < 2
     2.upto(self - 1).all? { |i| remainder(i).nonzero? }
   end
 
@@ -40,6 +40,11 @@ class Array
   end
 
   def combine_with(other)
-    zip(other).flatten.compact
+    shorter, longer = length < other.length ? [self, other] : [other, self]
+
+    combined = take(shorter.length).zip(other.take(shorter.length)).flatten(1)
+    rest     = longer.drop(shorter.length)
+
+    combined + rest
   end
 end
