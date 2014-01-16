@@ -32,7 +32,7 @@ class Array
   end
 
   def average
-    reduce(:+).to_f / size
+    reduce(:+).to_f / size unless empty?
   end
 
   def drop_every(n)
