@@ -16,7 +16,7 @@ class Integer
   end
 
   def harmonic
-    0.upto(self).inject { |sum, i| sum + Rational(1, i) }
+    0.upto(self).reduce { |sum, i| sum + Rational(1, i) }
   end
 
   def digits
