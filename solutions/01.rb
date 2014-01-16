@@ -1,7 +1,7 @@
 class Integer
   def prime?
     return false if self < 2
-    2.upto(self - 1).all? { |i| remainder(i).nonzero? }
+    2.upto(pred).all? { |i| remainder(i).nonzero? }
   end
 
   def prime_factors
@@ -36,7 +36,7 @@ class Array
   end
 
   def drop_every(n)
-    select.with_index { |_, index| (index + 1).remainder(n).nonzero? }
+    select.with_index { |_, index| index.succ.remainder(n).nonzero? }
   end
 
   def combine_with(other)
