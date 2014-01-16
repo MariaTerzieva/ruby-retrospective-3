@@ -21,9 +21,7 @@ end
 
 class Array
   def frequencies
-    frequencies_hash = Hash.new(0)
-    each { |value| frequencies_hash[value] += 1 }
-    frequencies_hash
+    each_with_object(Hash.new(0)) { |value, hash| hash[value] += 1 }
   end
 
   def average
