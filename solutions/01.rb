@@ -20,7 +20,7 @@ class Integer
   end
 
   def digits
-    abs.to_s.split('').map { |string_digit| string_digit.to_i }
+    abs.to_s.chars.map { |string_digit| string_digit.to_i }
   end
 end
 
