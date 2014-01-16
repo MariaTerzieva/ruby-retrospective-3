@@ -47,25 +47,19 @@ end
 
 module TasksInformation
   def tasks_todo
-    tasks_information :todo
+    filter(Criteria.status :todo).count
   end
 
   def tasks_in_progress
-    tasks_information :current
+    filter(Criteria.status :current).count
   end
 
   def tasks_completed
-    tasks_information :done
+    filter(Criteria.status :done).count
   end
 
   def completed?
     tasks_completed == count
-  end
-
-  private
-
-  def tasks_information(status)
-    filter(Criteria.status status).count
   end
 end
 
@@ -77,7 +71,6 @@ class TodoList
 
   def self.parse(text)
     parsed = Parser.new(text) { |args| Todo.new *args }
-
     TodoList.new parsed.tasks
   end
 
