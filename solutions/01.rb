@@ -42,7 +42,7 @@ class Array
   def combine_with(other)
     shorter, longer = length < other.length ? [self, other] : [other, self]
 
-    combined = take(shorter.length).zip(other.take(shorter.length)).flatten(1)
+    combined = take(shorter.length).zip(other).flatten(1)
     rest     = longer.drop(shorter.length)
 
     combined + rest
