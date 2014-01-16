@@ -5,14 +5,9 @@ class Integer
   end
 
   def prime_factors
-    prime_factors_array, upper_limit = [], abs
-    2.upto(upper_limit).each do |i|
-      while upper_limit.remainder(i).zero?
-        upper_limit /= i
-        prime_factors_array << i
-      end
-    end
-    prime_factors_array
+    return [] if self == 1
+    factor = (2..abs).find { |i| remainder(i).zero? }
+    [factor] + (abs / factor).prime_factors
   end
 
   def harmonic
