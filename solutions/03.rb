@@ -50,8 +50,7 @@ module Graphics
         canvas.full_pixels.each { |x, y| pixels[y * canvas.width + x] = "<b></b>" }
         output = ""
         pixels.each_slice(canvas.width) { |row| output << row.join("") << "<br>" }
-        body = output.chomp("<br>")
-        [BEGINNING, body, ENDING].join("")
+        [BEGINNING, output.chomp("<br>"), ENDING].join("")
       end
     end
   end
@@ -111,11 +110,10 @@ module Graphics
   class Bresenham
     def initialize(line)
       @x, @y, @end_x, @end_y = *line.from.coordinates, *line.to.coordinates
-      @pixels = []
+      @pixels, @swap = [], false
       @delta_x, @delta_y = (@end_x - @x).abs, (@end_y - @y).abs
       @signum_x, @signum_y = @end_x <=> @x, @end_y <=> @y
       @error = 2 * @delta_y - @delta_x
-      @swap = false
     end
 
     def swap
