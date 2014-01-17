@@ -11,7 +11,7 @@ module Graphics
     end
 
     class Html
-      BEGINNING = <<-HTML_BEGINNING
+      HEADER = <<-HEADER.freeze
                     <!DOCTYPE html>
                     <html>
                     <head>
@@ -37,20 +37,20 @@ module Graphics
                     </head>
                     <body>
                       <div class="canvas">
-                  HTML_BEGINNING
+                  HEADER
 
-      ENDING = <<-HTML_ENDING
+      FOOTER = <<-FOOTER.freeze
                    </div>
                  </body>
                  </html>
-               HTML_ENDING
+               FOOTER
 
       def self.render(canvas)
         pixels = Array.new(canvas.width * canvas.height, "<i></i>")
         canvas.full_pixels.each { |x, y| pixels[y * canvas.width + x] = "<b></b>" }
         output = ""
         pixels.each_slice(canvas.width) { |row| output << row.join("") << "<br>" }
-        [BEGINNING, output.chomp("<br>"), ENDING].join("")
+        [HEADER, output.chomp("<br>"), FOOTER].join("")
       end
     end
   end
