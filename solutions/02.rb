@@ -67,28 +67,6 @@ class TodoList
   include Enumerable
   include TasksInformation
 
-  def self.parse(text)
-    parsed = Parser.new(text) { |args| Todo.new *args }
-    TodoList.new parsed.tasks
-  end
-
-  def initialize(tasks)
-    @tasks = tasks
-  end
-
-  def each
-    @tasks.each { |task| yield task }
-  end
-
-  def filter(criteria)
-    TodoList.new select { |task| criteria.satisfied_by? task }
-  end
-
-  def adjoin(other)
-    TodoList.new @tasks.concat(other.tasks).uniq
-  end
-
-
   class Parser
     attr_reader :tasks
 
@@ -110,6 +88,27 @@ class TodoList
         tags.split(',').map(&:strip)
       ]
     end
+  end
+
+  def self.parse(text)
+    parsed = Parser.new(text) { |args| Todo.new *args }
+    TodoList.new parsed.tasks
+  end
+
+  def initialize(tasks)
+    @tasks = tasks
+  end
+
+  def each
+    @tasks.each { |task| yield task }
+  end
+
+  def filter(criteria)
+    TodoList.new select { |task| criteria.satisfied_by? task }
+  end
+
+  def adjoin(other)
+    TodoList.new @tasks.concat(other.tasks).uniq
   end
 
   protected
