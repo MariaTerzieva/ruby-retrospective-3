@@ -2,15 +2,27 @@ module Graphics
   class Renderers
     class Ascii
       def render(canvas)
-        pixels = Array.new(canvas.width * canvas.height, "-")
-        canvas.full_pixels.each { |x, y| pixels[y * canvas.width + x] = "@" }
+        pixels = Array.new(canvas.width * canvas.height, blank)
+        canvas.full_pixels.each { |x, y| pixels[y * canvas.width + x] = full }
         output = ""
-        pixels.each_slice(canvas.width) { |row| output << row.join("") << "\n" }
-        output.chomp("\n")
+        pixels.each_slice(canvas.width) { |row| output << row.join("") << delimiter }
+        output.chomp(delimiter)
+      end
+
+      def blank
+        "-".freeze
+      end
+
+      def full
+        "@".freeze
+      end
+
+      def delimiter
+        "\n"
       end
     end
 
-    class Html
+    class Html < Ascii
       HEADER = <<-HEADER.freeze
                     <!DOCTYPE html>
                     <html>
@@ -46,11 +58,19 @@ module Graphics
                FOOTER
 
       def render(canvas)
-        pixels = Array.new(canvas.width * canvas.height, "<i></i>")
-        canvas.full_pixels.each { |x, y| pixels[y * canvas.width + x] = "<b></b>" }
-        output = ""
-        pixels.each_slice(canvas.width) { |row| output << row.join("") << "<br>" }
-        [HEADER, output.chomp("<br>"), FOOTER].join("")
+        [HEADER, super, FOOTER].join("")
+      end
+
+      def blank
+        "<i></i>".freeze
+      end
+
+      def full
+        "<b></b>".freeze
+      end
+
+      def delimiter
+        "<br>".freeze
       end
     end
   end
