@@ -110,7 +110,33 @@ module Graphics
     alias_method :eql?, :==
   end
 
-  class Bresenham
+  class Line
+    attr_reader :from, :to
+
+    def initialize(from, to)
+      if from.x > to.x or (from.x == to.x and from.y > to.y)
+        @from, @to = to, from
+      else
+        @from, @to = from, to
+      end
+    end
+
+    def hash
+      [from.hash, to.hash].hash
+    end
+
+    def ==(other)
+      from == other.from and to == other.to
+    end
+
+    alias_method :eql?, :==
+
+    def rasterize
+      Bresenham.new(self).rasterize
+    end
+  end
+
+  class Line::Bresenham
     def initialize(line)
       @x, @y, @end_x, @end_y = *line.from.coordinates, *line.to.coordinates
       @pixels, @swap = [], false
@@ -142,32 +168,6 @@ module Graphics
         next_pixel
       end
       @pixels << [@end_x, @end_y]
-    end
-  end
-
-  class Line
-    attr_reader :from, :to
-
-    def initialize(from, to)
-      if from.x > to.x or (from.x == to.x and from.y > to.y)
-        @from, @to = to, from
-      else
-        @from, @to = from, to
-      end
-    end
-
-    def hash
-      [from.hash, to.hash].hash
-    end
-
-    def ==(other)
-      from == other.from and to == other.to
-    end
-
-    alias_method :eql?, :==
-
-    def rasterize
-      Bresenham.new(self).rasterize
     end
   end
 
