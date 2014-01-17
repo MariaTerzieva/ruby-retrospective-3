@@ -176,8 +176,11 @@ module Graphics
     attr_reader :left, :right
 
     def initialize(left, right)
-      @left = Line.new(left, right).from
-      @right = Line.new(left, right).to
+      if left.x > right.x or (left.x == right.x and left.y > right.y)
+        @left, @right = right, left
+      else
+        @left, @right = left, right
+      end
     end
 
     def hash
