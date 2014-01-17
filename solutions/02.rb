@@ -67,8 +67,6 @@ class TodoList
   include Enumerable
   include TasksInformation
 
-  attr_reader :tasks
-
   def self.parse(text)
     parsed = Parser.new(text) { |args| Todo.new *args }
     TodoList.new parsed.tasks
@@ -117,4 +115,8 @@ class TodoList
       ]
     end
   end
+
+  protected
+
+  attr_reader :tasks
 end
