@@ -65,7 +65,9 @@ module Graphics
     end
 
     def set_pixel(x, y)
-      @full_pixels << [x, y]
+      if x.between?(0, width.pred) and y.between?(0, height.pred)
+        @full_pixels << [x, y]
+      end
     end
 
     def pixel_at?(x, y)
