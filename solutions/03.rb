@@ -167,8 +167,7 @@ module Graphics
     alias_method :eql?, :==
 
     def rasterize
-      bresenham = Bresenham.new self
-      bresenham.rasterize
+      Bresenham.new(self).rasterize
     end
   end
 
