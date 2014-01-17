@@ -210,10 +210,12 @@ module Graphics
     end
 
     def rasterize
-        lines = Line.new(top_left, top_right).rasterize
-        lines += Line.new(top_left, bottom_left).rasterize
-        lines += Line.new(bottom_left, bottom_right).rasterize
-        lines += Line.new(bottom_right, top_right).rasterize
+    [
+      Line.new(top_left, top_right),
+      Line.new(top_left, bottom_left),
+      Line.new(bottom_left, bottom_right),
+      Line.new(bottom_right, top_right),
+    ].map { |line| line.rasterize }.flatten(1).uniq
     end
   end
 end
