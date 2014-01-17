@@ -92,7 +92,7 @@ module Graphics
     end
 
     def coordinates
-      [@x, @y]
+      [x, y]
     end
 
     def rasterize
@@ -100,11 +100,11 @@ module Graphics
     end
 
     def hash
-      [@x, @y].hash
+      [x, y].hash
     end
 
     def ==(other)
-      @x == other.x and @y == other.y
+      x == other.x and y == other.y
     end
 
     alias_method :eql?, :==
