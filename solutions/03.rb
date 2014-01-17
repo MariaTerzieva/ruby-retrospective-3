@@ -197,24 +197,16 @@ module Graphics
       Point.new left.x, [left.y, right.y].min
     end
 
-    def width
-      (left.x - right.x).abs
-    end
-
-    def height
-      (left.y - right.y).abs
-    end
-
     def top_right
-      Point.new top_left.x + width, top_left.y
+      Point.new right.x, [left.y, right.y].min
     end
 
     def bottom_left
-      Point.new top_left.x, top_left.y + height
+      Point.new left.x, [left.y, right.y].max
     end
 
     def bottom_right
-      Point.new top_left.x + width, top_left.y + height
+      Point.new right.x, [left.y, right.y].max
     end
 
     def border
