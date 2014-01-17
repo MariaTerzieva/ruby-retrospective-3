@@ -159,8 +159,8 @@ module Graphics
   class Line::Bresenham
     def initialize(from_x, from_y, to_x, to_y)
       @from_x, @from_y, @to_x, @to_y = from_x, from_y, to_x, to_y
-      @delta_x, @delta_y = (@to_x - @from_x).abs, (@to_y - @from_y).abs
-      @signum_x, @signum_y = @to_x <=> @from_x, @to_y <=> @from_y
+      @delta_x, @delta_y = (to_x - from_x).abs, (to_y - from_y).abs
+      @signum_x, @signum_y = to_x <=> from_x, to_y <=> from_y
       @pixels = []
       @swap = false
     end
