@@ -85,7 +85,6 @@ module Graphics
 
   class Point
     attr_reader :x, :y
-    alias_method :eql?, :==
 
     def initialize(x, y)
       @x = x
@@ -107,6 +106,8 @@ module Graphics
     def ==(other)
       @x == other.x and @y == other.y
     end
+
+    alias_method :eql?, :==
   end
 
   class Bresenham
@@ -145,8 +146,6 @@ module Graphics
   end
 
   class Line
-    alias_method :eql?, :==
-
     def initialize(from, to)
       @from = from
       @to = to
@@ -176,6 +175,8 @@ module Graphics
       from == other.from and to == other.to
     end
 
+    alias_method :eql?, :==
+
     def rasterize
       bresenham = Bresenham.new self
       bresenham.rasterize
@@ -184,7 +185,6 @@ module Graphics
 
   class Rectangle
     attr_reader :left, :right, :top_left
-    alias_method :eql?, :==
 
     def initialize(left, right)
       @left = Line.new(left, right).from
@@ -201,6 +201,8 @@ module Graphics
     def ==(other)
       top_left == other.top_left and bottom_right == other.bottom_right
     end
+
+    alias_method :eql?, :==
 
     def top_right
       Point.new @top_left.x + @width, @top_left.y
