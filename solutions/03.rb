@@ -173,14 +173,11 @@ module Graphics
   end
 
   class Rectangle
-    attr_reader :left, :right, :top_left
+    attr_reader :left, :right
 
     def initialize(left, right)
       @left = Line.new(left, right).from
       @right = Line.new(left, right).to
-      @top_left = Point.new([left.x, right.x].min, [left.y, right.y].min)
-      @width = (left.x - right.x).abs
-      @height = (left.y - right.y).abs
     end
 
     def hash
@@ -193,16 +190,28 @@ module Graphics
 
     alias_method :eql?, :==
 
+    def top_left
+      Point.new left.x, [left.y, right.y].min
+    end
+
+    def width
+      (left.x - right.x).abs
+    end
+
+    def height
+      (left.y - right.y).abs
+    end
+
     def top_right
-      Point.new @top_left.x + @width, @top_left.y
+      Point.new top_left.x + width, top_left.y
     end
 
     def bottom_left
-      Point.new @top_left.x, @top_left.y + @height
+      Point.new top_left.x, top_left.y + height
     end
 
     def bottom_right
-      Point.new @top_left.x + @width, @top_left.y + @height
+      Point.new top_left.x + width, top_left.y + height
     end
 
     def border
