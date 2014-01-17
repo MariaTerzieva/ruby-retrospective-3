@@ -80,10 +80,6 @@ class TodoList
     @tasks.each { |task| yield task }
   end
 
-  def count
-    @tasks.count
-  end
-
   def filter(criteria)
     TodoList.new select { |task| criteria.satisfied_by? task }
   end
