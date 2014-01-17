@@ -1,7 +1,7 @@
 module Graphics
   class Renderers
     class Ascii
-      def self.render(canvas)
+      def render(canvas)
         pixels = Array.new(canvas.width * canvas.height, "-")
         canvas.full_pixels.each { |x, y| pixels[y * canvas.width + x] = "@" }
         output = ""
@@ -45,7 +45,7 @@ module Graphics
                  </html>
                FOOTER
 
-      def self.render(canvas)
+      def render(canvas)
         pixels = Array.new(canvas.width * canvas.height, "<i></i>")
         canvas.full_pixels.each { |x, y| pixels[y * canvas.width + x] = "<b></b>" }
         output = ""
@@ -79,7 +79,7 @@ module Graphics
     end
 
     def render_as(renderer)
-      renderer.render self
+      renderer.new.render self
     end
   end
 
