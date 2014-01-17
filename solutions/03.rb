@@ -115,7 +115,6 @@ module Graphics
       @pixels, @swap = [], false
       @delta_x, @delta_y = (@end_x - @x).abs, (@end_y - @y).abs
       @signum_x, @signum_y = @end_x <=> @x, @end_y <=> @y
-      @error = 2 * @delta_y - @delta_x
     end
 
     def swap
@@ -123,6 +122,7 @@ module Graphics
         @delta_x, @delta_y = @delta_y, @delta_x
         @swap = true
       end
+      @error = 2 * @delta_y - @delta_x
     end
 
     def next_pixel
