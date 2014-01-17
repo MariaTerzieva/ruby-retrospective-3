@@ -146,24 +146,13 @@ module Graphics
   end
 
   class Line
+    attr_reader :from, :to
+
     def initialize(from, to)
-      @from = from
-      @to = to
-    end
-
-    def from
-      if @from.x == @to.x
-        @from.y < @to.y ? @from : @to
+      if from.x > to.x or (from.x == to.x and from.y > to.y)
+        @from, @to = to, from
       else
-        @from.x < @to.x ? @from : @to
-      end
-    end
-
-    def to
-      if @from.x == @to.x
-        @from.y < @to.y ? @to : @from
-      else
-        @from.x < @to.x ? @to : @from
+        @from, @to = from, to
       end
     end
 
