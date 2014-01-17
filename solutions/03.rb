@@ -115,12 +115,8 @@ module Graphics
       @y = y
     end
 
-    def coordinates
-      [x, y]
-    end
-
     def rasterize
-      [coordinates]
+      [[x, y]]
     end
 
     def hash
@@ -156,16 +152,17 @@ module Graphics
     alias_method :eql?, :==
 
     def rasterize
-      Bresenham.new(self).rasterize
+      Bresenham.new(from.x, from.y, to.x, to.y).rasterize
     end
   end
 
   class Line::Bresenham
-    def initialize(line)
-      @x, @y, @end_x, @end_y = *line.from.coordinates, *line.to.coordinates
-      @pixels, @swap = [], false
-      @delta_x, @delta_y = (@end_x - @x).abs, (@end_y - @y).abs
-      @signum_x, @signum_y = @end_x <=> @x, @end_y <=> @y
+    def initialize(from_x, from_y, to_x, to_y)
+      @from_x, @from_y, @to_x, @to_y = from_x, from_y, to_x, to_y
+      @delta_x, @delta_y = (@to_x - @from_x).abs, (@to_y - @from_y).abs
+      @signum_x, @signum_y = @to_x <=> @from_x, @to_y <=> @from_y
+      @pixels = []
+      @swap = false
     end
 
     def swap
@@ -178,20 +175,20 @@ module Graphics
 
     def next_pixel
       if @error > 0
-        @swap ? @x += @signum_x : @y += @signum_y
+        @swap ? @from_x += @signum_x : @from_y += @signum_y
         @error -= 2 * @delta_x
       end
-      @swap ? @y += @signum_y : @x += @signum_x
+      @swap ? @from_y += @signum_y : @from_x += @signum_x
       @error += 2 * @delta_y
     end
 
     def rasterize
       swap
       @delta_x.times do
-        @pixels << [@x, @y]
+        @pixels << [@from_x, @from_y]
         next_pixel
       end
-      @pixels << [@end_x, @end_y]
+      @pixels << [@to_x, @to_y]
     end
   end
 
