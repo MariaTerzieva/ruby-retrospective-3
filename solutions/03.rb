@@ -209,21 +209,11 @@ module Graphics
       Point.new right.x, [left.y, right.y].max
     end
 
-    def border
+    def rasterize
         lines = Line.new(top_left, top_right).rasterize
         lines += Line.new(top_left, bottom_left).rasterize
         lines += Line.new(bottom_left, bottom_right).rasterize
         lines += Line.new(bottom_right, top_right).rasterize
-    end
-
-    def rasterize
-      if left == right
-        left.rasterize
-      elsif left.x == right.x or left.y == right.y
-        Line.new(left, right).rasterize
-      else
-        border
-      end
     end
   end
 end
