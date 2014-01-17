@@ -3,7 +3,7 @@ module Graphics
     class Ascii
       def render(canvas)
         pixels = Array.new(canvas.width * canvas.height, blank)
-        canvas.full_pixels.each { |x, y| pixels[y * canvas.width + x] = full }
+        canvas.each_pixel { |x, y| pixels[y * canvas.width + x] = full }
         output = ""
         pixels.each_slice(canvas.width) { |row| output << row.join("") << delimiter }
         output.chomp(delimiter)
@@ -18,7 +18,7 @@ module Graphics
       end
 
       def delimiter
-        "\n"
+        "\n".freeze
       end
     end
 
@@ -76,7 +76,7 @@ module Graphics
   end
 
   class Canvas
-    attr_reader :width, :height, :full_pixels
+    attr_reader :width, :height
 
     def initialize(width, height)
       @width = width
@@ -92,6 +92,10 @@ module Graphics
 
     def pixel_at?(x, y)
       @full_pixels.include? [x, y]
+    end
+
+    def each_pixel
+      @full_pixels.each { |pixel| yield pixel }
     end
 
     def draw(figure)
