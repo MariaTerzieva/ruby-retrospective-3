@@ -1,6 +1,6 @@
 module Asm
   def self.asm(&block)
-    AsmProgram.new.evaluate(&block)
+    AsmProgram.new.execute &block
   end
 
   module RegisterActions
@@ -29,7 +29,6 @@ module Asm
     end
   end
 
-
   class AsmProgram
     include RegisterActions
 
@@ -45,7 +44,7 @@ module Asm
 
     JUMPS.each do |jump_name, condition|
       define_method jump_name do |where|
-        jump(where, condition)
+        execute_jump where, condition
       end
     end
 
@@ -61,10 +60,10 @@ module Asm
       @labels[label_name] = @instructions.size
     end
 
-    def evaluate(&block)
+    def execute(&block)
       instance_eval &block
       until @instruction == @instructions.size
-        instance_exec(&@instructions[@instruction])
+        instance_exec &@instructions[@instruction]
         @instruction += 1
       end
       @registers.values
@@ -76,9 +75,9 @@ module Asm
 
     private
 
-    def jump(where, condition)
+    def execute_jump(where, condition)
       @instructions << -> do
-        if instance_exec(&condition)
+        if instance_exec &condition
           @instruction = @labels[where].pred
         end
       end
