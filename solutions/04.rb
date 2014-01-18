@@ -1,8 +1,6 @@
 module Asm
   def self.asm(&block)
-    asm_program = AsmProgram.new
-    asm_program.evaluate(&block)
-    asm_program.register_values
+    AsmProgram.new.evaluate(&block)
   end
 
   module Instructions
@@ -10,20 +8,28 @@ module Asm
       value.is_a?(Symbol) ? @registers[value] : value
     end
 
-    def execute_mov(destination_register, source)
-      @registers[destination_register] = get_value(source)
+    def mov(destination_register, source)
+      @instructions << -> do
+        @registers[destination_register] = get_value(source)
+      end
     end
 
-    def execute_inc(destination_register, value=1)
-      @registers[destination_register] += get_value(value)
+    def inc(destination_register, value=1)
+      @instructions << -> do
+        @registers[destination_register] += get_value(value)
+      end
     end
 
-    def execute_dec(destination_register, value=1)
-      @registers[destination_register] -= get_value(value)
+    def dec(destination_register, value=1)
+      @instructions << -> do
+        @registers[destination_register] -= get_value(value)
+      end
     end
 
-    def execute_cmp(register, value)
-      @flag = @registers[register] <=> get_value(value)
+    def cmp(register, value)
+      @instructions << -> do
+        @flag = @registers[register] <=> get_value(value)
+      end
     end
   end
 
@@ -32,26 +38,18 @@ module Asm
     include Instructions
 
     JUMPS = {
-      execute_jmp: -> { true },
-      execute_je: -> { @flag == 0 },
-      execute_jne: -> { @flag != 0 },
-      execute_jl: -> { @flag < 0 },
-      execute_jle: -> { @flag <= 0 },
-      execute_jg: -> { @flag > 0 },
-      execute_jge: -> { @flag >= 0 },
+      jmp: -> { true },
+      je: -> { @flag == 0 },
+      jne: -> { @flag != 0 },
+      jl: -> { @flag < 0 },
+      jle: -> { @flag <= 0 },
+      jg: -> { @flag > 0 },
+      jge: -> { @flag >= 0 },
     }
-
-    FUNCTIONS = [:mov, :inc, :dec, :cmp, :jmp, :je, :jne, :jl, :jle, :jg, :jge]
 
     JUMPS.each do |jump_name, condition|
       define_method jump_name do |where|
         jump(where, condition)
-      end
-    end
-
-    FUNCTIONS.each do |function|
-      define_method function do |*args|
-        @instructions << [function, *args]
       end
     end
 
@@ -60,7 +58,7 @@ module Asm
       @flag = 0
       @instructions = []
       @instruction = 0
-      @labels = {}
+      @labels = Hash.new { |_, key| key }
     end
 
     def label(label_name)
@@ -68,21 +66,19 @@ module Asm
     end
 
     def jump(where, condition)
-      if instance_exec(&condition)
-        @instruction = (where.is_a?(Symbol) ? @labels[where] : where).pred
+      @instructions << -> do
+        if instance_exec(&condition)
+          @instruction = @labels[where].pred
+        end
       end
     end
 
     def evaluate(&block)
       instance_eval &block
       until @instruction == @instructions.size
-        name, *args = @instructions[@instruction]
-        send "execute_#{name}".to_sym, *args
+        instance_exec(&@instructions[@instruction])
         @instruction += 1
       end
-    end
-
-    def register_values
       @registers.values
     end
 
