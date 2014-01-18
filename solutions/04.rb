@@ -8,7 +8,7 @@ module Asm
   module Jumps
     def execute_jmp(where)
       from = where.is_a?(Symbol) ? send(where) : where
-      @current_instruction = from - 1
+      @current_instruction = from.pred
     end
 
     def execute_je(where)
@@ -40,36 +40,24 @@ module Asm
   module Instructions
     include Jumps
 
+    def get_value(value)
+      value.is_a?(Symbol) ? @registers[value] : value
+    end
+
     def execute_mov(destination_register, source)
-      if source.is_a? Fixnum
-        @registers[destination_register] = source
-      else
-        @registers[destination_register] = @registers[source]
-      end
+      @registers[destination_register] = get_value(source)
     end
 
     def execute_inc(destination_register, value=1)
-      if value.is_a? Fixnum
-        @registers[destination_register] += value
-      else
-        @registers[destination_register] += @registers[value]
-      end
+      @registers[destination_register] += get_value(value)
     end
 
     def execute_dec(destination_register, value=1)
-      if value.is_a? Fixnum
-        @registers[destination_register] -= value
-      else
-        @registers[destination_register] -= @registers[value]
-      end
+      @registers[destination_register] -= get_value(value)
     end
 
     def execute_cmp(register, value)
-      if value.is_a? Fixnum
-        @flag = @registers[register] <=> value
-      else
-        @flag = @registers[register] <=> @registers[value]
-      end
+      @flag = @registers[register] <=> get_value(value)
     end
   end
 
