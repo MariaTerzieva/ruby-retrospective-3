@@ -1,6 +1,8 @@
 module Asm
   def self.asm(&block)
-    Evaluator.new.evaluate &block
+    asm_program = AsmProgram.new
+    asm_program.evaluate(&block)
+    asm_program.register_values
   end
 
   module Jumps
@@ -72,7 +74,7 @@ module Asm
   end
 
 
-  class Evaluator
+  class AsmProgram
     include Instructions
 
     functions = [:mov, :inc, :dec, :cmp, :jmp, :je, :jne, :jl, :jle, :jg, :jge]
@@ -103,6 +105,9 @@ module Asm
         send "execute_#{name}".to_sym, *args
         @current_instruction += 1
       end
+    end
+
+    def register_values
       @registers.values
     end
 
