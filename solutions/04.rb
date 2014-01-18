@@ -3,11 +3,7 @@ module Asm
     AsmProgram.new.evaluate(&block)
   end
 
-  module Instructions
-    def get_value(value)
-      value.is_a?(Symbol) ? @registers[value] : value
-    end
-
+  module RegisterActions
     def mov(destination_register, source)
       @instructions << -> do
         @registers[destination_register] = get_value(source)
@@ -35,7 +31,7 @@ module Asm
 
 
   class AsmProgram
-    include Instructions
+    include RegisterActions
 
     JUMPS = {
       jmp: -> { true },
@@ -65,14 +61,6 @@ module Asm
       @labels[label_name] = @instructions.size
     end
 
-    def jump(where, condition)
-      @instructions << -> do
-        if instance_exec(&condition)
-          @instruction = @labels[where].pred
-        end
-      end
-    end
-
     def evaluate(&block)
       instance_eval &block
       until @instruction == @instructions.size
@@ -84,6 +72,20 @@ module Asm
 
     def method_missing(method, *args, &block)
       method
+    end
+
+    private
+
+    def jump(where, condition)
+      @instructions << -> do
+        if instance_exec(&condition)
+          @instruction = @labels[where].pred
+        end
+      end
+    end
+
+    def get_value(value)
+      value.is_a?(Symbol) ? @registers[value] : value
     end
   end
 end
