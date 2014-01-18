@@ -100,9 +100,7 @@ module Asm
     end
 
     def method_missing(method, *args, &block)
-      singleton_class.class_eval do
-        define_method(method) { __method__ }
-      end
+      method
     end
   end
 end
