@@ -10,15 +10,15 @@ module Graphics
       end
 
       def blank
-        "-".freeze
+        "-"
       end
 
       def full
-        "@".freeze
+        "@"
       end
 
       def delimiter
-        "\n".freeze
+        "\n"
       end
     end
 
@@ -62,15 +62,15 @@ module Graphics
       end
 
       def blank
-        "<i></i>".freeze
+        "<i></i>"
       end
 
       def full
-        "<b></b>".freeze
+        "<b></b>"
       end
 
       def delimiter
-        "<br>".freeze
+        "<br>"
       end
     end
   end

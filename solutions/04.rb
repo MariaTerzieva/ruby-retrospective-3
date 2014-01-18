@@ -40,7 +40,7 @@ module Asm
       jle: -> { @flag <= 0 },
       jg: -> { @flag > 0 },
       jge: -> { @flag >= 0 },
-    }
+    }.freeze
 
     JUMPS.each do |jump_name, condition|
       define_method jump_name do |where|
