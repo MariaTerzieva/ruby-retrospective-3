@@ -7,7 +7,7 @@ module Asm
 
   module Jumps
     def execute_jmp(where)
-      from = where.is_a?(Symbol) ? send(where) : where
+      from = where.is_a?(Symbol) ? @labels[where] : where
       @current_instruction = from.pred
     end
 
@@ -77,13 +77,11 @@ module Asm
       @flag = 0
       @instructions = []
       @current_instruction = 0
+      @labels = {}
     end
 
     def label(label_name)
-      next_instruction = @instructions.size
-      singleton_class.class_eval do
-        define_method(label_name) { next_instruction }
-      end
+      @labels[label_name] = @instructions.size
     end
 
     def evaluate(&block)
