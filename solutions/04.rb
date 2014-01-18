@@ -7,8 +7,7 @@ module Asm
 
   module Jumps
     def execute_jmp(where)
-      from = where.is_a?(Symbol) ? @labels[where] : where
-      @current_instruction = from.pred
+      @current_instruction = (where.is_a?(Symbol) ? @labels[where] : where).pred
     end
 
     def execute_je(where)
