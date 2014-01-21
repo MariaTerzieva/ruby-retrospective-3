@@ -1,17 +1,17 @@
 class Integer
   def prime?
     return false if self < 2
-    (2..pred).all? { |i| remainder(i).nonzero? }
+    2.upto(pred).all? { |i| remainder(i).nonzero? }
   end
 
   def prime_factors
     return [] if self == 1
-    factor = (2..abs).find { |i| remainder(i).zero? }
+    factor = 2.upto(abs).find { |i| remainder(i).zero? }
     [factor] + (abs / factor).prime_factors
   end
 
   def harmonic
-    (0..self).reduce { |sum, i| sum + Rational(1, i) }
+    0.upto(self).reduce { |sum, i| sum + Rational(1, i) }
   end
 
   def digits
