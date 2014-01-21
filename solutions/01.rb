@@ -25,7 +25,7 @@ class Array
   end
 
   def average
-    reduce(:+).to_f / size unless empty?
+    reduce(:+).fdiv(size) unless empty?
   end
 
   def drop_every(n)
